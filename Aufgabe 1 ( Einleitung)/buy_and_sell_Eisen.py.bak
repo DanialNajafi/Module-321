@@ -1,0 +1,30 @@
+import subprocess
+
+
+def run_ps(command):
+    result = subprocess.run(
+        ["powershell", "-Command", command],
+        capture_output=True,
+        text=True
+    )
+
+print(run_ps("ssh ship@192.168.101.60"))
+
+## First buy 4 IRON at Azura Station and sell 4 at Core Station
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Azura Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/buy --data '{\"station\": \"Azura Station\", \"what\": \"IRON\", \"amount\": 4}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Core Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/sell --data '{\"station\": \"Core Station\", \"what\": \"IRON\", \"amount\": 4}' {\"kind\": \"success\"}"))
+
+## Second buy 8 IRON at Core Station and sell 8 at Azura Station
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Azura Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/buy --data '{\"station\": \"Azura Station\", \"what\": \"IRON\", \"amount\": 8}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Core Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/sell --data '{\"station\": \"Core Station\", \"what\": \"IRON\", \"amount\": 8}' {\"kind\": \"success\"}"))
+
+## Third buy 12 IRON at Azura Station and sell 12 at Core Station
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Azura Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/buy --data '{\"station\": \"Azura Station\", \"what\": \"IRON\", \"amount\": 12}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2009/set_target --data '{\"target\": {\"x\": \"Core Station\"}}' {\"kind\": \"success\"}"))
+print(run_ps("curl -XPOST http://192.168.101.60:2011/sell --data '{\"station\": \"Core Station\", \"what\": \"IRON\", \"amount\": 12}' {\"kind\": \"success\"}"))
+

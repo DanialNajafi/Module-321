@@ -1,0 +1,10 @@
+[Interface]
+Address = 192.168.101.67/20
+PrivateKey = AEiw4pcXJdnpq3ipfEFxqmwf8o/NJQtjeOSefIuspn8=
+
+[Peer]
+PublicKey = Wa/2bagBWZZMHGW3nTVgRlqPjTNousdmukR2lMGRcnI=
+Endpoint = the-ship.ch:51820
+AllowedIPs = 192.168.96.0/20
+
+PersistentKeepalive = 25

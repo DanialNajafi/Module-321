@@ -1,4 +1,4 @@
-import subprocess
+import json
 import paramiko
 import time
 
@@ -26,18 +26,28 @@ try:
         print(stdout.read().decode())
 
     def stations_in_reach():
-        stdin, stdout, stderr = client.exec_command("curl -XGET http://192.168.101.60:2009/stations")
-        raw = stdout.read().decode().strip()
+        stdin, stdout, stderr = client.exec_command("curl -sS -XGET http://192.168.101.60:2011/stations_in_reach")
+        raw = stdout.read().decode()
 
         if not raw:
             err = stderr.read().decode().strip()
             print(f"Error: {err}")
-            return ""
-        return raw
+            return {}
+
+        try:
+            data = json.loads(raw)
+        except json.JSONDecodeError:
+            print(f"Keine gueltige JSON-Antwort: {raw}")
+            return {}
+
+        if data.get("kind") != "success":
+            print(f"Antwort ohne Erfolg: {raw}")
+            return {}
+
+        return data.get("stations", {})
 
     def is_in_reach(station_name):
-        stations = stations_in_reach()
-        return station_name in stations
+        return station_name in stations_in_reach()
 
     def buy_sell_iron(number_of_iron):
         got_to_station("Azura Station")
@@ -69,6 +79,8 @@ try:
 
     ## Third buy 12 IRON at Azura Station and sell 12 at Core Station
     buy_sell_iron(12)
+
+    
 
 finally:
     client.close()

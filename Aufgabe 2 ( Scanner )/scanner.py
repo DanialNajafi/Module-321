@@ -10,4 +10,4 @@ queue_name = result.method.queue
 channel.queue_bind(exchange='scanner/detected_objects', queue=queue_name)
 
 for method_frame, properties, body in channel.consume(queue=queue_name, auto_ack=True):
-    print(json.dumps(json.loads(body.decode('utf-8'))))
+    print(body.decode("utf-8"), flush=True)

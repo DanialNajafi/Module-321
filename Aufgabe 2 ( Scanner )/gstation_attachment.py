@@ -1,14 +1,15 @@
 import json
+import queue
 import paramiko
 import time
 import subprocess
 import sys
 import os
+import threading
 
 client = paramiko.SSHClient()
 client.load_system_host_keys()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-start_time = None 
 script_path = os.path.join(os.path.dirname(__file__), "scanner.py")
 try:
     client.connect(
@@ -46,44 +47,55 @@ try:
         print(stdout.read().decode())
 
     process = subprocess.Popen(     
-        ["python", script_path],
+        [sys.executable, "-u", script_path],
         stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
         text=True,
         bufsize=1
     )
 
     def return_station_position(data):
-        for station in data:
-            if station.get("name") == "G-Station 1-6":
+        for station in data: 
+            print(f"Station datas: {station}")
+            if station.get('name') == 'G-Station 1-6':
+                print(f"Found G-Station 1-6 at position: {station.get('pos')}")
                 return station.get('pos')
 
-    for line in process.stdout:
+    got_to_station(16944 , -13051)
+
+    latest_line = queue.Queue(maxsize=1)
+
+    def read_scanner():
+        for line in process.stdout:
+            try:
+                latest_line.get_nowait()
+            except queue.Empty:
+                pass
+
+            latest_line.put(line)
+
+    threading.Thread(target=read_scanner, daemon=True).start()
+
+
+    while True:
+        try:
+            line = latest_line.get()
+        except queue.Empty:
+            continue
         try:
             data = json.loads(line.strip())
+            print(f"Received data: {data}")
         except json.JSONDecodeError:
             print(f"Keine gueltige JSON-Antwort: {line.strip()}")
             continue
 
-        while not is_in_reach("G-Station 1-6"):
-            print("G-Station 1-6 is not in reach.")
-            start_time = None
-            result = return_station_position(data)
-            if result:
-                got_to_station(result.get("x"), result.get("y"))
-            
-        if is_in_reach("G-Station 1-6"):
-            if start_time is None:
-                start_time = time.time()
-                print("G-Station 1-6 is in reach.")
-            elapsed = time.time() - start_time
-
+        #if not is_in_reach("G-Station 1-6"):
+        print("G-Station 1-6 is not in reach.")
         result = return_station_position(data)
         if result:
-            got_to_station(result.get("x"), result.get("y"))
+            got_to_station(result.get('x'), result.get('y'))
+            print(f"Going to G-Station 1-6 at position: {result.get('x')}, {result.get('y')}")        
+        
 
-        if elapsed >= 60:
-            print("G-Station 1-6 has been in reach for 60 seconds. Exiting.")
-            break
 finally:
     client.close()

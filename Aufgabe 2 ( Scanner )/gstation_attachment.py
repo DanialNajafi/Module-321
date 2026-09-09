@@ -30,7 +30,7 @@ try:
 
     # Functions to simplify the code
 
-    def got_to_station(xPosition, yPosition):
+    def go_to_station(xPosition, yPosition):
         stdin, stdout, stderr = client.exec_command(f"curl -XPOST http://192.168.101.60:2009/set_target --data '{{\"target\": {{\"x\": {xPosition}, \"y\": {yPosition}}}}}' {{\"kind\": \"success\"}}")
         print(stdout.read().decode())
 
@@ -53,7 +53,7 @@ try:
 
     # Starting the process to read the scanner data
 
-    got_to_station(16944 , -13051)
+    go_to_station(16944 , -13051)
     latest_line = queue.Queue(maxsize=1)
     threading.Thread(target=read_scanner, daemon=True).start()
 
@@ -72,7 +72,7 @@ try:
         print("G-Station 1-6 is not in reach.")
         result = return_station_position(data)
         if result:
-            got_to_station(result.get('x'), result.get('y'))
+            go_to_station(result.get('x'), result.get('y'))
             print(f"Going to G-Station 1-6 at position: {result.get('x')}, {result.get('y')}")        
         
 finally:

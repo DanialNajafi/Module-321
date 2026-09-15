@@ -108,19 +108,42 @@ Die genaue IP-Adresse für Ship 61 muss die IP-Adresse der **anderen VM** sein. 
 
 
 dylan:
-import websocket from "websocket";
-const WebSocket = websocket.w3cwebsocket;
- 
-const ws = new WebSocket("ws://192.168.101.61:2025/ws");
-ws.onmessage = (event) => {
-  console.log("server <- client: " + event.data);
-};
-ws.onopen = () => {
-  console.log("connected");
-  {
-    const data = { source: "Artemis Station", data: [1, 2, 3, 4] };
-    console.log("client -> server: " + JSON.stringify(data));
-    ws.send(JSON.stringify(data));
-  }
-};
+
+
+```js
+import http from "http";
+import { server as WebSocketServer } from "websocket";
+
+const server = http.createServer();
+server.listen(5000, () => {
+  console.log("Ship 61 WebSocket-Server läuft auf Port 5000");
+});
+
+const wsServer = new WebSocketServer({
+  httpServer: server,
+  autoAcceptConnections: false
+});
+
+wsServer.on("request", (request) => {
+  const connection = request.accept(null, request.origin);
+
+  console.log("Verbunden mit Ship 60");
+
+  connection.on("message", (message) => {
+    if (message.type === "utf8") {
+      const data = JSON.parse(message.utf8Data);
+      console.log("Nachricht empfangen:", data);
+
+      console.log("Von:", data.from);
+      console.log("Payload:", data.payload);
+    }
+  });
+
+  connection.on("close", () => {
+    console.log("Verbindung geschlossen");
+  });
+});
+
+```
+
  

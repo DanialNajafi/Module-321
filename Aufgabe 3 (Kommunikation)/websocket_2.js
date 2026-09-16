@@ -55,15 +55,22 @@ stationConnection.onopen = () => {
 
 // Echte Nachrichten vom Elyse-Terminal -> weiterleiten an Ship 61
 
-// stationConnection.onmessage = (event) => {
-//   console.log("Von Elyse-Terminal-Modul empfangen:", event.data);
+stationConnection.onmessage = (event) => {
+  console.log("Von Elyse-Terminal-Modul empfangen:", event.data);
 
-//   if (shipConnection.readyState === WebSocket.OPEN) {
-//     shipConnection.send(event.data);
+  if (shipConnection.readyState === WebSocket.OPEN) {
+    const receivedData = JSON.parse(event.data);
+    const data = {
+      source: "Elyse Terminal",
+      msg: receivedData.msg,
+    };
 
-//     console.log("An Ship 61 weitergeleitet");
-//   }
-// };
+    console.log("An Ship 61 gesendet:", JSON.stringify(data));
+    shipConnection.send(JSON.stringify(data));
+
+    console.log("An Ship 61 weitergeleitet");
+  }
+};
 
 // Nachrichten von Ship 61 -> weiterleiten an Elyse-Terminal-Modul
 
@@ -71,7 +78,14 @@ shipConnection.onmessage = (event) => {
   console.log("Von Ship 61 empfangen:", event.data);
 
   if (stationConnection.readyState === WebSocket.OPEN) {
-    stationConnection.send(event.data);
+    const receivedData = JSON.parse(event.data);
+    const data = {
+      destination: "Shangris Station",
+      msg: receivedData.msg,
+    };
+
+    console.log("An Shangris Station gesendet:", JSON.stringify(data));
+    stationConnection.send(JSON.stringify(data));
 
     console.log("An Elyse-Terminal-Modul weitergeleitet");
   }

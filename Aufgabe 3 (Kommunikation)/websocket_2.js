@@ -65,53 +65,9 @@ function startWebSockets() {
         msg: arrayPayload // Elyse erwartet zwingend "msg"
       };
 
-<<<<<<< HEAD
       stationConnection.send(JSON.stringify(payload));
       console.log("⬅️ [1x pro Sekunde] Nachricht an Elyse abgeliefert.");
       latestMessageForElyse = null; // Leeren, damit wir nicht doppelt senden
     }
   }, 1000);
 }
-=======
-// Echte Nachrichten vom Elyse-Terminal -> weiterleiten an Ship 61
-
-stationConnection.onmessage = (event) => {
-  // console.log("Von Elyse-Terminal-Modul empfangen:", event.data);
-
-  if (shipConnection.readyState === WebSocket.OPEN) {
-    const receivedData = JSON.parse(event.data);
-    const data = {
-      source: "Elyse Terminal",
-      msg: receivedData.msg,
-    };
-
-    // console.log("An Ship 61 gesendet:", JSON.stringify(data));
-    shipConnection.send(JSON.stringify(data));
-
-    // console.log("An Ship 61 weitergeleitet");
-  }
-};
-
-// Nachrichten von Ship 61 -> weiterleiten an Elyse-Terminal-Modul
-
-shipConnection.onmessage = (event) => {
-  // console.log("Von Ship 61 empfangen:", event.data);
-
-  if (stationConnection.readyState === WebSocket.OPEN) {
-    const receivedData = JSON.parse(event.data);
-    const data = {
-      source: "Shangris Station",
-      msg: receivedData.msg,
-    };
-
-    console.log("An Shangris Station gesendet:", JSON.stringify(data));
-    stationConnection.send(JSON.stringify(data));
-
-    // console.log("An Elyse-Terminal-Modul weitergeleitet");
-  }
-};
-
-shipConnection.onopen = () => {
-  console.log("Verbindung zu Ship 61 hergestellt");
-};
->>>>>>> e78b84e (Refactor WebSocket message logging; comment out debug logs for clarity)

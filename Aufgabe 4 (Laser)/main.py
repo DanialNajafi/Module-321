@@ -16,7 +16,7 @@ COMMUNICATION_URL = "http://192.168.101.60:2011"
 CARGO_HOLD_URL = "http://192.168.101.60:2012"
 
 # Pass hier die IP deines eigenen Servers/Laptops im Schulnetz an!
-MEINE_IP = "192.168.101.61"
+MEINE_IP = "192.168.101.60"
 
 ARAKROCK = {"x": -18236, "y": -11783}
 MINING_STANDOFF_DISTANCE = 200

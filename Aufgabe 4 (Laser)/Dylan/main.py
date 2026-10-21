@@ -9,11 +9,11 @@ import paramiko
 # ==========================================
 # KONFIGURATION & KOORDINATEN
 # ==========================================
-LASER_URL = "http://192.168.101.60:2018"
-SHIP_URL = "http://192.168.101.60:2009"
-NAVIGATION_URL = "http://192.168.101.60:2010"
-COMMUNICATION_URL = "http://192.168.101.60:2011"
-CARGO_HOLD_URL = "http://192.168.101.60:2012"
+LASER_URL = "http://192.168.101.61:2018"
+SHIP_URL = "http://192.168.101.61:2009"
+NAVIGATION_URL = "http://192.168.101.61:2010"
+COMMUNICATION_URL = "http://192.168.101.61:2011"
+CARGO_HOLD_URL = "http://192.168.101.61:2012"
 
 # Pass hier die IP deines eigenen Servers/Laptops im Schulnetz an!
 MEINE_IP = "192.168.101.61"
@@ -34,7 +34,7 @@ client.load_system_host_keys()
 client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
 client.connect(
-    hostname="192.168.101.60",
+    hostname="192.168.101.61",
     username="ship",
     password="ship",
 )

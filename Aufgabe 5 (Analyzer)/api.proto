@@ -1,0 +1,15 @@
+// Aus der Schiffs-Doku. Der Analyzer Alpha holt die Daten bei grpc://192.168.101.61:2102 ab.
+syntax = "proto3";
+
+package api.unsafe.sensor_void_energy;
+
+service SensorVoidEnergyServer {
+    rpc read_sensor_data(Void) returns (SensorData);
+}
+
+message Void {
+}
+
+message SensorData {
+    string hexdata = 1;
+}

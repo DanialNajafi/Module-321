@@ -2,7 +2,7 @@
 # 1. Energie fuer Analyzer + Sensor einschalten
 # 2. GENAU zum Uran Stone (-2100/3600) fliegen und dort bleiben
 # 3. gRPC-Server (wie grpc_analyzer.py vom Kollegen): der Analyzer Alpha holt
-#    bei grpc://192.168.101.61:2102 die Vakuumenergie-Sensordaten ab
+#    bei grpc://192.168.101.60:2102 die Vakuumenergie-Sensordaten ab
 # Starten auf der Schiffs-VM: python3 main.py
 import json
 import math
@@ -24,7 +24,7 @@ sys.path.insert(0, tmp)
 import api_pb2
 import api_pb2_grpc
 
-SHIP = "http://192.168.101.61"
+SHIP = "http://192.168.101.60"
 SENSOR_BASE_URL = f"{SHIP}:2037"
 URAN_STONE = {"x": -2100, "y": 3600}
 
